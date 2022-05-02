@@ -45,15 +45,20 @@ Analysis
 Interesting facts from the dataset:
 
 a. We can see a significant decrease in the GDP of many countries in 2020 due to COVID
+
 b. The GDP dataset doesnot contain the data for all the countries in the Country dataset, So the corresponding analysis is done for the matching countries
+
 c. With the data provided, I was able to build a small Datawarehouse having a STAR schema which can be used for easy integration with downstream applications
 
 Challenges:
 
 a. While reading the GCP CSV in pandas, it had some unknow column containing null values, so have to cleanse it.
+
 b. Had to change schema as per naming standards so as to maintain proper schema in postgres and to insert data into the table.
 Also could have directly created the table out of the pandas data frame but that would result in unconventional naming of tables and columns in the db.
+
 c. In real time scenario, the  password  for the DB could be retrieved from a Key Management Store(KMS) in a secure way, also not using getpass() as it would not work in IDE. So, getting it as input from the command line as of now.
+
 d. The GDP dataset has some missing GDP values which had to be filtered out for certain analysis.
 
 
