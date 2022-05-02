@@ -52,7 +52,7 @@ c. With the data provided, I was able to build a small Datawarehouse having a ST
 
 Challenges:
 
-a. While reading the GCP CSV in pandas, it had some unknow column containing null values, so have to cleanse it.
+a. While reading the GDP CSV in pandas, it had some unknow column containing null values, so have to cleanse it.
 
 b. Had to change schema as per naming standards so as to maintain proper schema in postgres and to insert data into the table.
 Also could have directly created the table out of the pandas data frame but that would result in unconventional naming of tables and columns in the db.
