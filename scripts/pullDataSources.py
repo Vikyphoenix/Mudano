@@ -7,6 +7,7 @@ pandas.set_option('display.max_rows', None)
 pandas.set_option('display.max_columns', None)
 pandas.set_option('display.width', None)
 
+
 def read_json_data_from_api(url: str) -> str:
     try:
         response = urlopen(url)
@@ -19,11 +20,12 @@ def read_json_data_from_api(url: str) -> str:
         print("The json response is :"+"\n"+json_lines)
         return json_lines
 
-def json_to_df(ip_json : list) -> pandas.DataFrame:
+
+def json_to_df(ip_json: list) -> pandas.DataFrame:
     try:
         json_output_df = pandas.json_normalize(ip_json)
     except Exception as e:
-        print('Loading below input json to pandas Dataframe failed !!!\n' + str(ip_json) )
+        print('Loading below input json to pandas Dataframe failed !!!\n' + str(ip_json))
         print(e)
         sys.exit(1)
     else:
@@ -31,11 +33,12 @@ def json_to_df(ip_json : list) -> pandas.DataFrame:
         print(json_output_df)
         return json_output_df
 
+
 def csv_to_df(csv_location: str) -> pandas.DataFrame:
     try:
         csv_output_df = pandas.read_csv(csv_location, header=0)
     except Exception as e:
-        print('Loading below csv file to pandas Dataframe failed !!!\n' + csv_location )
+        print('Loading below csv file to pandas Dataframe failed !!!\n' + csv_location)
         print(e)
         sys.exit(1)
 
@@ -43,6 +46,3 @@ def csv_to_df(csv_location: str) -> pandas.DataFrame:
         print("The dataframe generated from csv file is :"+"\n")
         print(csv_output_df)
         return csv_output_df
-
-
-
