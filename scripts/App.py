@@ -54,6 +54,7 @@ class EtlApplication(object):
         except Exception as e:
             print('Error occurred while transforming the input source data into normalized data frames !!!')
             print(e)
+            sys.exit(1)
         else:
             print('\nThe input data sources are successfully Cleansed and Normalized into data frames !!!!')
             print('\nThe data frames would be loaded into the below tables:')
@@ -65,6 +66,7 @@ class EtlApplication(object):
 
     def load_output_data(self):
         output_df_list=self.transform_input_data()
+        test_db_connection(self.conn_string,'countrystats')
         print('Loading Dataframes to postgres DB tables under the schema countrystats .....\n')
         write_to_db(self.conn_string, output_df_list[0], 'countrystats', 'country_raw')
         write_to_db(self.conn_string, output_df_list[1], 'countrystats', 'country_gdp')
@@ -74,8 +76,7 @@ class EtlApplication(object):
         write_to_db(self.conn_string, output_df_list[7], 'countrystats', 'lending_type')
         write_to_db(self.conn_string, output_df_list[2], 'countrystats', 'country_fact')
         write_to_db(self.conn_string, output_df_list[3], 'countrystats', 'country_details')
-        print('\nCompleted loading Dataframes to postgres DB !!!\n')
-
+        #print('\nCompleted loading Dataframes to postgres DB !!!\n')
 
 
 if __name__ == "__main__":
@@ -85,7 +86,7 @@ if __name__ == "__main__":
     parser.add_argument('--gdp_csv_path', required=False, default="D:\PycharmProjects\Mudano\input\GEPData.csv")
     #in real time scenario, the user name and password could be retrieved from a KMS, also not using getpass() as it would not work in IDE
     parser.add_argument('--postgres_user_name', required=False, default="postgres")
-    parser.add_argument('--postgres_password', required=False, default="postgres")
+    parser.add_argument('--postgres_password', required=False, default="site4POND")
     parser.add_argument('--postgres_host_name', required=False, default="localhost")
     parser.add_argument('--postgres_port', required=False, default="5432")
     parser.add_argument('--postgres_db', required=False, default="postgres")
