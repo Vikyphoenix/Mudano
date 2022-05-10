@@ -6,10 +6,11 @@ from pushToDb import *
 
 class EtlApplication(object):
 
-    def __init__(self, country_fetch_api_url, gdp_csv_file_path, conn_string):
+    def __init__(self, country_fetch_api_url, gdp_csv_file_path, conn_string, schema):
         self.country_fetch_api_url = country_fetch_api_url
         self.gdp_csv_file_path = gdp_csv_file_path
         self.conn_string = conn_string
+        self.schema = schema
 
     def extract_input_data(self) -> list:
         country_json_data = read_json_data_from_api(self.country_fetch_api_url)
@@ -74,16 +75,16 @@ class EtlApplication(object):
 
     def load_output_data(self):
         output_df_list = self.transform_input_data()
-        test_db_connection(self.conn_string, 'countrystats')
-        print('Loading Dataframes to postgres DB tables under the schema countrystats .....\n')
-        write_to_db(self.conn_string, output_df_list[0], 'countrystats', 'country_raw')
-        write_to_db(self.conn_string, output_df_list[1], 'countrystats', 'country_gdp')
-        write_to_db(self.conn_string, output_df_list[4], 'countrystats', 'region')
-        write_to_db(self.conn_string, output_df_list[5], 'countrystats', 'admin_region')
-        write_to_db(self.conn_string, output_df_list[6], 'countrystats', 'income_level')
-        write_to_db(self.conn_string, output_df_list[7], 'countrystats', 'lending_type')
-        write_to_db(self.conn_string, output_df_list[2], 'countrystats', 'country_fact')
-        write_to_db(self.conn_string, output_df_list[3], 'countrystats', 'country_details')
+        test_db_connection(self.conn_string, self.schema)
+        print('Loading Dataframes to postgres DB tables under the schema ' + self.schema + '.....\n')
+        write_to_db(self.conn_string, output_df_list[0], self.schema, 'country_raw')
+        write_to_db(self.conn_string, output_df_list[1], self.schema, 'country_gdp')
+        write_to_db(self.conn_string, output_df_list[4], self.schema, 'region')
+        write_to_db(self.conn_string, output_df_list[5], self.schema, 'admin_region')
+        write_to_db(self.conn_string, output_df_list[6], self.schema, 'income_level')
+        write_to_db(self.conn_string, output_df_list[7], self.schema, 'lending_type')
+        write_to_db(self.conn_string, output_df_list[2], self.schema, 'country_fact')
+        write_to_db(self.conn_string, output_df_list[3], self.schema, 'country_details')
         # print('\nCompleted loading Dataframes to postgres DB !!!\n')
 
 
@@ -99,7 +100,7 @@ if __name__ == "__main__":
     parser.add_argument('--postgres_port', required=False, default="5432")
     parser.add_argument('--postgres_db', required=False, default="postgres")
     # the schema and table details are as per the DDL provided
-
+    postgres_schema = 'countrystats'
     # please provide the above list of arguments at runtime while executing the application
     # Or please edit the above default values while executing the applidation.
     args = vars(parser.parse_args())
@@ -107,5 +108,5 @@ if __name__ == "__main__":
     postgres_conn_string = str(
         'postgresql+psycopg2://' + args['postgres_user_name'] + ':' + args['postgres_password'] + '@' +
         args['postgres_host_name'] + ':' + args['postgres_port'] + '/' + args['postgres_db'])
-    process_country_gdp_data = EtlApplication(args['country_api_url'], args['gdp_csv_path'], postgres_conn_string)
+    process_country_gdp_data = EtlApplication(args['country_api_url'], args['gdp_csv_path'], postgres_conn_string, postgres_schema)
     process_country_gdp_data.load_output_data()
