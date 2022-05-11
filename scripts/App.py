@@ -108,5 +108,6 @@ if __name__ == "__main__":
     postgres_conn_string = str(
         'postgresql+psycopg2://' + args['postgres_user_name'] + ':' + args['postgres_password'] + '@' +
         args['postgres_host_name'] + ':' + args['postgres_port'] + '/' + args['postgres_db'])
-    process_country_gdp_data = EtlApplication(args['country_api_url'], args['gdp_csv_path'], postgres_conn_string, postgres_schema)
+    process_country_gdp_data = EtlApplication(args['country_api_url'], args['gdp_csv_path'], postgres_conn_string,
+                                              postgres_schema)
     process_country_gdp_data.load_output_data()
